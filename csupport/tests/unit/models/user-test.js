@@ -1,8 +1,9 @@
 import { moduleForModel, test } from 'ember-qunit';
+import Ember from 'ember';
 
 moduleForModel('user', 'Unit | Model | user', {
   // Specify the other units that are required for this test.
-  needs: []
+  needs: ['model:ticket', 'ember-validations@validator:local/presence']
 });
 
 test('it exists', function(assert) {
@@ -39,4 +40,36 @@ test('it has an attribute: role', function(assert){
   var model = this.subject();
   var hasRole = Object.keys(model.toJSON()).indexOf('role') > -1;
   assert.ok(hasRole);
+});
+
+test('ticket relationship', function(assert) {
+  var model = this.store().modelFor('user');
+  var relationship = Ember.get(model, 'relationshipsByName').get('tickets');
+
+  assert.equal(relationship.key, 'tickets');
+  assert.equal(relationship.kind, 'hasMany');
+});
+
+test('name should be required', function(assert){
+  var model = this.subject();
+  Ember.run(function(){
+    model.set('name', '');
+  });
+  assert.equal(model.get('isValid'), false, 'User is not valid without a name');
+});
+
+test('email should be required', function(assert){
+  var model = this.subject();
+  Ember.run(function(){
+    model.set('email', '');
+  });
+  assert.equal(model.get('isValid'), false, 'User is not valid without an email');
+});
+
+test('password should be required', function(assert){
+  var model = this.subject();
+  Ember.run(function(){
+    model.set('password', '');
+  });
+  assert.equal(model.get('isValid'), false, 'User is not valid without a password');
 });
