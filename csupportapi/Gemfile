@@ -21,6 +21,13 @@ gem 'puma', '~> 3.0'
 # gem 'rack-cors'
 gem 'devise'
 gem 'cancancan'
+gem 'annotate'
+gem 'devise_token_auth' #For API
+gem 'omniauth' #For devise tokan auth
+
+group :test do
+  gem 'shoulda-matchers', require: false
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
