@@ -25,6 +25,7 @@
 #  tokens                 :text(65535)
 #  created_at             :datetime
 #  updated_at             :datetime
+#  roles_mask             :integer
 #
 
 class User < ApplicationRecord
@@ -36,4 +37,21 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { minimum: 5, maximum: 50 }
   EMAIL_FORMAT = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: EMAIL_FORMAT }
+
+  ROLES = %i[customer agent admin]
+
+  def roles=(roles)
+   roles = [*roles].map { |r| r.to_sym }
+   self.roles_mask = (roles & ROLES).map { |r| 2**ROLES.index(r) }.inject(0, :+)
+  end
+
+  def roles
+   ROLES.reject do |r|
+     ((roles_mask.to_i || 0) & 2**ROLES.index(r)).zero?
+   end
+  end
+
+  def has_role?(role)
+   roles.include?(role)
+  end
 end

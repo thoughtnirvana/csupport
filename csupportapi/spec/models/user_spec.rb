@@ -25,6 +25,7 @@
 #  tokens                 :text(65535)
 #  created_at             :datetime
 #  updated_at             :datetime
+#  roles_mask             :integer
 #
 
 require 'rails_helper'
@@ -45,5 +46,21 @@ RSpec.describe User, :type => :model do
       it { should validate_uniqueness_of(:email).case_insensitive }
     end
     it { should_not allow_value("steve@apple").for(:email) }
+  end
+
+  describe "roles" do
+    it { should respond_to :roles_mask }
+    it { should respond_to :roles }
+    it { should respond_to :roles= }
+
+    describe "should be admin" do
+      u = User.new(name: "Steve", email: "steve@apple.com", roles: "admin")
+      u.roles.should == [:admin]
+    end
+
+    describe "should not be assigned role" do
+      u = User.new(name: "Steve", email: "steve@apple.com", roles: "random")
+      u.roles.should == []
+    end
   end
 end
