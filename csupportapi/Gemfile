@@ -24,6 +24,7 @@ gem 'cancancan'
 gem 'annotate'
 gem 'devise_token_auth' #For API
 gem 'omniauth' #For devise tokan auth
+gem 'active_model_serializers', '~> 0.10.0'
 
 group :test do
   gem 'shoulda-matchers', require: false
