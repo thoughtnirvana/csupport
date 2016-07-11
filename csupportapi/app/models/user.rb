@@ -54,4 +54,6 @@ class User < ApplicationRecord
   def has_role?(role)
    roles.include?(role)
   end
+
+  has_many :tickets
 end
