@@ -28,6 +28,9 @@
 #
 
 class User < ApplicationRecord
+  devise :database_authenticatable, :registerable,
+        :recoverable, :rememberable, :trackable, :validatable,
+        :omniauthable
   include DeviseTokenAuth::Concerns::User
 
   validates :name, presence: true, length: { minimum: 5, maximum: 50 }
