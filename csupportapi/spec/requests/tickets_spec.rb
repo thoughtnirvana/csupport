@@ -23,7 +23,7 @@ RSpec.describe "Tickets", :type => :request do
       get '/tickets'
       expect(response.status).to eq 200
       body = JSON.parse(response.body)
-      ticket_names = body.map{|ticket| ticket['name']}
+      ticket_names = body["data"].map{|ticket| ticket['attributes']['name']}
       expect(ticket_names).to match_array(['Ticket1', 'Ticket2'])
     end
   end

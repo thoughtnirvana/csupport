@@ -30,7 +30,7 @@ class Ticket < ApplicationRecord
   end
 
   def owner
-    user.name.to_s
+    user.name.to_s if user
   end
 
   def curstatus

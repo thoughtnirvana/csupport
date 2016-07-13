@@ -14,7 +14,7 @@ RSpec.describe "Users", :type => :request do
       get '/users'
       expect(response.status).to eq 200
       body = JSON.parse(response.body)
-      user_names = body.map{|user| user['name']}
+      user_names = body["data"].map{|user| user['attributes']['name']}
       expect(user_names).to match_array(['Steve Jobs', 'Bill Gates'])
     end
   end
