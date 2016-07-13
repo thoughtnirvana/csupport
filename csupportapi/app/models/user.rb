@@ -39,10 +39,15 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: EMAIL_FORMAT }
 
   ROLES = %i[customer agent admin]
-
+  ROLES_HASH = {"Customer":1, "Agent":2, "Admin":4}
+  
   def roles=(roles)
    roles = [*roles].map { |r| r.to_sym }
    self.roles_mask = (roles & ROLES).map { |r| 2**ROLES.index(r) }.inject(0, :+)
+  end
+
+  def role
+    (roles.include? :admin) ? "Admin" : (roles.include? :agent) ? "Agent" : "Customer"
   end
 
   def roles

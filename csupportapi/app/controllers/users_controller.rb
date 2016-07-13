@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :ember_params, only: [:update]
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
@@ -42,6 +43,17 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
+    end
+
+    def ember_params
+      if params[:data]
+        params[:data][:attributes].delete("password")
+        current_role = params[:data][:attributes]["role"]
+        params[:data][:attributes].delete("role")
+        current_role.nil? ? (roles_mask=1) : (roles_mask = User::ROLES_HASH[current_role.to_sym])
+        params[:user] = params[:data][:attributes]
+        params[:user][:roles_mask] = roles_mask
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

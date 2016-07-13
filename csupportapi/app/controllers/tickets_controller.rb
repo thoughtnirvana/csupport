@@ -1,4 +1,5 @@
 class TicketsController < ApplicationController
+  before_action :ember_params, only: [:create, :update]
   before_action :set_ticket, only: [:show, :update, :destroy]
 
   # GET /tickets
@@ -44,8 +45,22 @@ class TicketsController < ApplicationController
       @ticket = Ticket.find(params[:id])
     end
 
+    def ember_params
+      if params[:data]
+        params[:data][:attributes].delete("owner")
+        current_status = params[:data][:attributes]["curstatus"]
+        params[:data][:attributes].delete("curstatus")
+        current_status.nil? ? (status=0) : (status = Ticket::STATUS_HASH[current_status.to_sym])
+        params[:ticket] = params[:data][:attributes]
+        params[:ticket][:user_id] = 1
+        params[:ticket][:status] = status
+      end
+    end
+
     # Only allow a trusted parameter "white list" through.
     def ticket_params
-      params.require(:ticket).permit(:name, :user_id, :description, :status)
+      unless params[:ticket].empty?
+        params.require(:ticket).permit(:name, :user_id, :description, :status)
+      end
     end
 end
